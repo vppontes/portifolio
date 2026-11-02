@@ -5,8 +5,12 @@ export function SiteLayout() {
   return (
     <div className="site-shell">
       <header className="site-header">
-        <Link className="brand" to="/" aria-label="Portfólio CP3 FIAP, página inicial">
-          CP3<span>.</span>
+        <Link
+          className="brand"
+          to="/"
+          aria-label="Portfólio de Victor Pontes, página inicial"
+        >
+          Portfólio<span>.</span>
         </Link>
         <nav aria-label="Navegação principal">
           <Link to="/">Início</Link>
@@ -30,10 +34,17 @@ export function SiteLayout() {
         <Outlet />
       </main>
       <footer className="site-footer">
-        <span>Portfólio CP3 FIAP · Victor Pontes</span>
-        <a href="mailto:victor.ppontes12@gmail.com">
-          victor.ppontes12@gmail.com
-        </a>
+        <span>Victor Pontes</span>
+        <div className="footer-links">
+          <a
+            href="https://www.linkedin.com/in/vppontes"
+            target="_blank"
+            rel="noreferrer"
+          >
+            LinkedIn
+          </a>
+          <a href="mailto:victor.ppontes12@gmail.com">E-mail</a>
+        </div>
       </footer>
     </div>
   )

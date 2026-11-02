@@ -19,7 +19,7 @@ export function RepositoryList({ repositories }: RepositoryListProps) {
             <h2>{repository.name}</h2>
           </div>
           <p className="repository-description">
-            {repository.description ?? 'O GitHub não tem descrição cadastrada.'}
+            {repository.description ?? 'Descrição não cadastrada no GitHub.'}
           </p>
           <dl className="repository-meta">
             <div>

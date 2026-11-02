@@ -7,19 +7,26 @@ export interface GitHubRepository {
   language: string | null
   updated_at: string
   homepage: string | null
+  fork: boolean
   owner: {
     login: string
   }
 }
 
-const FEATURED_REPOSITORIES = [
-  { owner: 'vppontes', name: 'Inserir-Perguntas' },
-  { owner: 'SAVAC-Challenge-FIAP', name: 'sprint4-front-webDev' },
-]
+export interface GitHubProfile {
+  name: string | null
+  login: string
+  avatar_url: string
+  html_url: string
+  location: string | null
+  bio: string | null
+}
 
-const README_DESCRIPTIONS: Record<string, string> = {
-  'SAVAC-Challenge-FIAP/sprint4-front-webDev':
-    'Landing page do Synesthesia, uma proposta de recurso para a câmera JOVI que transforma fotos em conteúdo para compartilhar e recomenda músicas com prévias de áudio.',
+const GITHUB_USERNAME = 'vppontes'
+const PORTFOLIO_REPOSITORY = 'vppontes/portifolio'
+const TEAM_REPOSITORY = {
+  owner: 'SAVAC-Challenge-FIAP',
+  name: 'sprint4-front-webDev',
 }
 
 async function fetchGitHubJson<T>(path: string): Promise<T> {
@@ -42,22 +49,32 @@ async function fetchGitHubJson<T>(path: string): Promise<T> {
   return (await response.json()) as T
 }
 
-export function fetchFeaturedRepositories() {
-  return Promise.all(
-    FEATURED_REPOSITORIES.map(({ owner, name }) =>
-      fetchGitHubJson<GitHubRepository>(
-        `/repos/${encodeURIComponent(owner)}/${encodeURIComponent(name)}`,
-      ),
-    ),
-  ).then((repositories) =>
-    repositories.map((repository) => ({
-      ...repository,
-      description:
-        repository.description ??
-        README_DESCRIPTIONS[repository.full_name] ??
-        null,
-    })),
+export function fetchGitHubProfile() {
+  return fetchGitHubJson<GitHubProfile>(
+    `/users/${encodeURIComponent(GITHUB_USERNAME)}`,
   )
+}
+
+export async function fetchPortfolioRepositories() {
+  const [repositories, teamRepository] = await Promise.all([
+    fetchGitHubJson<GitHubRepository[]>(
+      `/users/${encodeURIComponent(GITHUB_USERNAME)}/repos?per_page=100&sort=updated`,
+    ),
+    fetchGitHubJson<GitHubRepository>(
+      `/repos/${encodeURIComponent(TEAM_REPOSITORY.owner)}/${encodeURIComponent(TEAM_REPOSITORY.name)}`,
+    ),
+  ])
+
+  return [...repositories, teamRepository]
+    .filter(
+      (repository) =>
+        !repository.fork && repository.full_name !== PORTFOLIO_REPOSITORY,
+    )
+    .sort(
+      (firstRepository, secondRepository) =>
+        Date.parse(secondRepository.updated_at) -
+        Date.parse(firstRepository.updated_at),
+    )
 }
 
 export function fetchRepository(owner: string, name: string) {

@@ -30,7 +30,7 @@ export function ProjectPage() {
       {repository && (
         <>
           <h1>{repository.name}</h1>
-          <p>{repository.description ?? 'O GitHub não tem descrição cadastrada.'}</p>
+          <p>{repository.description ?? 'Descrição não cadastrada no GitHub.'}</p>
           <dl className="project-details">
             <div>
               <dt>Repositório</dt>

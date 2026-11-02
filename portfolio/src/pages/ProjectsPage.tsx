@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { RepositoryList } from '../components/RepositoryList'
-import { fetchFeaturedRepositories } from '../services/github'
+import { fetchPortfolioRepositories } from '../services/github'
 
 export function ProjectsPage() {
   const {
@@ -9,15 +9,18 @@ export function ProjectsPage() {
     error,
     refetch,
   } = useQuery({
-    queryKey: ['github', 'featured-repositories'],
-    queryFn: fetchFeaturedRepositories,
+    queryKey: ['github', 'portfolio-repositories'],
+    queryFn: fetchPortfolioRepositories,
   })
 
   return (
     <section className="content-page">
       <p className="eyebrow">GitHub</p>
       <h1>Projetos</h1>
-      <p>Repositórios públicos selecionados, carregados diretamente do GitHub.</p>
+      <p>
+        Reúno projetos e estudos que estão no meu GitHub, incluindo trabalhos
+        da FIAP.
+      </p>
       {isPending && <p role="status">Carregando projetos...</p>}
       {error && (
         <div className="notice" role="alert">
