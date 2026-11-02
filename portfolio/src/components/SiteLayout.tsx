@@ -11,7 +11,8 @@ export function SiteLayout() {
         <nav aria-label="Navegação principal">
           <Link to="/">Início</Link>
           <Link to="/projetos">Projetos</Link>
-          <a href="mailto:victor.ppontes12@gmail.com">Contato</a>
+          <Link to="/contato">Contato</Link>
+          <Link to="/login">Painel</Link>
         </nav>
         <div className="header-actions">
           <a

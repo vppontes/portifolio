@@ -27,12 +27,9 @@ export function HomePage() {
           <Link className="button" to="/projetos">
             Explorar projetos
           </Link>
-          <a
-            className="button button-secondary"
-            href="mailto:victor.ppontes12@gmail.com"
-          >
+          <Link className="button button-secondary" to="/contato">
             Entre em contato
-          </a>
+          </Link>
         </div>
       </section>
       <section className="featured-section" aria-labelledby="featured-heading">

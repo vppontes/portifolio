@@ -198,6 +198,149 @@ h1 {
   margin-top: 32px;
 }
 
+.contact-page {
+  max-width: 700px;
+}
+
+.contact-form {
+  display: grid;
+  gap: 10px;
+  margin-top: 32px;
+}
+
+.contact-form label {
+  margin-top: 10px;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  min-height: 48px;
+  padding: 12px;
+  border: 1px solid var(--surface-border);
+  border-radius: 6px;
+  color: var(--text-primary);
+  background: var(--surface);
+  resize: vertical;
+}
+
+.contact-form textarea {
+  min-height: 150px;
+  line-height: 1.5;
+}
+
+.contact-form input[aria-invalid='true'],
+.contact-form textarea[aria-invalid='true'] {
+  border-color: #d65b57;
+}
+
+.field-error,
+.form-feedback-error {
+  color: #d65b57;
+}
+
+.field-hint {
+  color: var(--text-muted);
+  font-size: 0.82rem;
+}
+
+.form-feedback {
+  margin: 12px 0 0;
+  line-height: 1.5;
+}
+
+.contact-form .button {
+  width: fit-content;
+}
+
+.dashboard-page {
+  align-self: stretch;
+}
+
+.dashboard-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 48px;
+}
+
+.dashboard-heading h1 {
+  font-size: clamp(2.5rem, 7vw, 4.5rem);
+}
+
+.dashboard-heading .button {
+  margin-top: 0;
+}
+
+.dashboard-section-heading {
+  margin-top: 24px;
+}
+
+.message-list {
+  display: grid;
+  gap: 16px;
+}
+
+.message-card {
+  padding: 22px;
+  border: 1px solid var(--surface-border);
+  border-radius: 10px;
+  background: var(--surface);
+}
+
+.message-card-heading {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.message-card h3 {
+  margin: 0 0 8px;
+  color: var(--heading);
+  font-size: 1.15rem;
+}
+
+.message-card time {
+  display: block;
+  margin-top: 18px;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}
+
+.message-content {
+  margin: 16px 0;
+  color: var(--text-primary);
+  line-height: 1.65;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.message-status {
+  flex: 0 0 auto;
+  padding: 5px 10px;
+  border: 1px solid var(--surface-border);
+  border-radius: 999px;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+}
+
+.message-status-answered {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.message-action {
+  min-height: 38px;
+  margin-top: 4px;
+  padding: 0 12px;
+  font-size: 0.82rem;
+}
+
 .login-form label {
   display: grid;
   gap: 8px;
@@ -412,6 +555,16 @@ h1 {
 
   .site-footer {
     align-items: start;
+    flex-direction: column;
+  }
+
+  .dashboard-heading {
+    align-items: start;
+    flex-direction: column;
+    margin-bottom: 36px;
+  }
+
+  .message-card-heading {
     flex-direction: column;
   }
 }

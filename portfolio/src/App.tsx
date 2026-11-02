@@ -8,6 +8,7 @@ import { LoginPage } from './pages/LoginPage'
 import { NotFoundPage } from './pages/NotFoundPage'
 import { ProjectPage } from './pages/ProjectPage'
 import { ProjectsPage } from './pages/ProjectsPage'
+import { ContactPage } from './pages/ContactPage'
 import './App.css'
 
 const DashboardPage = lazy(() =>
@@ -25,6 +26,7 @@ function App() {
             <Route index element={<HomePage />} />
             <Route path="projetos" element={<ProjectsPage />} />
             <Route path="projetos/:owner/:repo" element={<ProjectPage />} />
+            <Route path="contato" element={<ContactPage />} />
             <Route path="login" element={<LoginPage />} />
             <Route element={<ProtectedRoute />}>
               <Route
