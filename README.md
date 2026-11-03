@@ -8,15 +8,13 @@ Portfólio pessoal desenvolvido para o CP3 da FIAP. O site apresenta meu perfil 
 ## Funcionalidades
 
 - Perfil, competências e links profissionais.
-- Listagem de repositórios públicos obtidos pela API do GitHub, com detalhes e estados de carregamento, erro e lista vazia.
+- Listagem de repositórios públicos obtidos pela API do GitHub.
 - Cache das consultas do GitHub com TanStack Query.
 - Formulário de contato com validação por campo e persistência das mensagens no Supabase.
 - Login administrativo com Supabase Auth e painel protegido para consultar mensagens, marcá-las como respondidas e escolher projetos em destaque.
 - Políticas Row Level Security (RLS) para restringir operações administrativas no banco.
 - Tema claro/escuro com preferência salva no navegador.
 - Interface responsiva e rotas de projetos.
-
-> O formulário salva as mensagens no banco, mas não envia notificações por e-mail.
 
 ## Tecnologias
 
@@ -29,8 +27,6 @@ Portfólio pessoal desenvolvido para o CP3 da FIAP. O site apresenta meu perfil 
 - Vercel
 
 ## Executar localmente
-
-**Requisitos:** Node.js 22.12 ou superior (ou 20.19 ou superior) e npm.
 
 ```bash
 git clone https://github.com/vppontes/portifolio.git
@@ -106,7 +102,3 @@ src/
 supabase/
   migrations/  Esquema e políticas do banco
 ```
-
-## Performance
-
-Em uma auditoria manual do Lighthouse para mobile na página inicial de produção, em 03/11/2026, o projeto obteve **96/100 em Performance**. A pontuação pode variar conforme rede, dispositivo e alterações futuras.
