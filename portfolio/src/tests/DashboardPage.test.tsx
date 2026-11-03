@@ -9,11 +9,23 @@ import {
   fetchContactMessages,
   setContactMessageAnswered,
 } from '../services/admin'
+import { fetchPortfolioRepositories } from '../services/github'
+import {
+  fetchFeaturedProjects,
+  setFeaturedProject,
+} from '../services/featured-projects'
 
 vi.mock('../services/admin', () => ({
   checkAdminAccess: vi.fn(),
   fetchContactMessages: vi.fn(),
   setContactMessageAnswered: vi.fn(),
+}))
+vi.mock('../services/github', () => ({
+  fetchPortfolioRepositories: vi.fn(),
+}))
+vi.mock('../services/featured-projects', () => ({
+  fetchFeaturedProjects: vi.fn(),
+  setFeaturedProject: vi.fn(),
 }))
 
 const authenticatedAdmin: AuthContextValue = {
@@ -52,6 +64,22 @@ describe('DashboardPage', () => {
       },
     ])
     vi.mocked(setContactMessageAnswered).mockResolvedValue()
+    vi.mocked(fetchPortfolioRepositories).mockResolvedValue([
+      {
+        id: 1,
+        name: 'featured-repo',
+        full_name: 'vppontes/featured-repo',
+        description: 'Um projeto em destaque.',
+        html_url: 'https://github.com/vppontes/featured-repo',
+        language: 'TypeScript',
+        updated_at: '2026-10-01T12:00:00.000Z',
+        homepage: null,
+        fork: false,
+        owner: { login: 'vppontes' },
+      },
+    ])
+    vi.mocked(fetchFeaturedProjects).mockResolvedValue([])
+    vi.mocked(setFeaturedProject).mockResolvedValue()
   })
 
   it('lists contact messages and marks a message as answered', async () => {
@@ -103,5 +131,34 @@ describe('DashboardPage', () => {
     ).toBeInTheDocument()
     expect(fetchContactMessages).not.toHaveBeenCalled()
     expect(screen.queryByText('Pessoa visitante')).not.toBeInTheDocument()
+  })
+
+  it('lets an admin feature a public repository on the home page', async () => {
+    const queryClient = new QueryClient({
+      defaultOptions: { queries: { retry: false } },
+    })
+
+    render(
+      <QueryClientProvider client={queryClient}>
+        <AuthContext.Provider value={authenticatedAdmin}>
+          <MemoryRouter>
+            <DashboardPage />
+          </MemoryRouter>
+        </AuthContext.Provider>
+      </QueryClientProvider>,
+    )
+
+    fireEvent.click(
+      await screen.findByRole('button', {
+        name: 'Destacar na página inicial',
+      }),
+    )
+
+    await waitFor(() => {
+      expect(setFeaturedProject).toHaveBeenCalledWith(
+        'vppontes/featured-repo',
+        true,
+      )
+    })
   })
 })

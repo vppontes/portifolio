@@ -7,6 +7,7 @@ Portfólio de Victor Pontes desenvolvido com React, TypeScript e Vite.
 - Tema escuro e claro com preferência salva no navegador.
 - Projetos públicos carregados da API do GitHub e armazenados em cache.
 - Página individual de detalhes para cada projeto selecionado.
+- Seleção de projetos em destaque pelo painel administrativo, exibida na página inicial.
 - Formulário de contato com validação e persistência no Supabase.
 - Login administrativo preparado para Supabase.
 
@@ -24,7 +25,7 @@ Para habilitar o login administrativo, copie `.env.example` para `.env.local` e 
 ## Supabase
 
 1. Copie `.env.example` para `.env.local` e preencha as credenciais públicas do projeto Supabase. Esse arquivo fica ignorado pelo Git.
-2. Aplique `supabase/migrations/202611020001_create_contact_messages.sql` pelo Supabase SQL Editor.
+2. Aplique, em ordem, as migrations em `supabase/migrations/` pelo Supabase SQL Editor.
 3. Crie a conta administrativa no Supabase Auth e, no SQL Editor, inclua seu usuário na tabela:
 
    ```sql
@@ -34,6 +35,7 @@ Para habilitar o login administrativo, copie `.env.example` para `.env.local` e 
    ```
 
    Não habilite cadastro público.
+4. Entre em `/login`, abra o painel e use a seção **Projetos em destaque** para escolher os repositórios que aparecem na página inicial.
 
 ## Verificações
 
