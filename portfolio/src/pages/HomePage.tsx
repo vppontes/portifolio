@@ -5,6 +5,7 @@ import {
   fetchGitHubProfile,
   fetchPortfolioRepositories,
 } from '../services/github'
+import { fetchFeaturedProjects } from '../services/featured-projects'
 
 export function HomePage() {
   const {
@@ -19,6 +20,15 @@ export function HomePage() {
   const { data: profile } = useQuery({
     queryKey: ['github', 'profile', 'vppontes'],
     queryFn: fetchGitHubProfile,
+  })
+  const {
+    data: featuredProjectNames,
+    isPending: isLoadingFeaturedProjects,
+    error: featuredProjectsError,
+    refetch: refetchFeaturedProjects,
+  } = useQuery({
+    queryKey: ['featured-projects'],
+    queryFn: fetchFeaturedProjects,
   })
 
   return (
@@ -111,8 +121,29 @@ export function HomePage() {
             </button>
           </div>
         )}
-        {repositories && (
-          <RepositoryList repositories={repositories.slice(0, 3)} />
+        {isLoadingFeaturedProjects && (
+          <p role="status">Carregando projetos em destaque...</p>
+        )}
+        {featuredProjectsError && (
+          <div className="notice" role="alert">
+            <p>
+              Não foi possível carregar os projetos em destaque:{' '}
+              {featuredProjectsError.message}
+            </p>
+            <button
+              className="text-button"
+              onClick={() => void refetchFeaturedProjects()}
+            >
+              Tentar novamente
+            </button>
+          </div>
+        )}
+        {repositories && featuredProjectNames && (
+          <RepositoryList
+            repositories={repositories.filter((repository) =>
+              featuredProjectNames.includes(repository.full_name),
+            )}
+          />
         )}
       </section>
     </div>

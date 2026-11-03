@@ -7,6 +7,11 @@ import {
   fetchContactMessages,
   setContactMessageAnswered,
 } from '../services/admin'
+import { fetchPortfolioRepositories } from '../services/github'
+import {
+  fetchFeaturedProjects,
+  setFeaturedProject,
+} from '../services/featured-projects'
 
 function getErrorMessage(error: unknown) {
   return error instanceof Error
@@ -47,6 +52,26 @@ export function DashboardPage() {
     queryFn: fetchContactMessages,
     enabled: isAdmin === true,
   })
+  const {
+    data: repositories,
+    isPending: isLoadingRepositories,
+    error: repositoriesError,
+    refetch: refetchRepositories,
+  } = useQuery({
+    queryKey: ['github', 'portfolio-repositories'],
+    queryFn: fetchPortfolioRepositories,
+    enabled: isAdmin === true,
+  })
+  const {
+    data: featuredProjectNames,
+    isPending: isLoadingFeaturedProjects,
+    error: featuredProjectsError,
+    refetch: refetchFeaturedProjects,
+  } = useQuery({
+    queryKey: ['featured-projects'],
+    queryFn: fetchFeaturedProjects,
+    enabled: isAdmin === true,
+  })
 
   const updateMessage = useMutation({
     mutationFn: ({
@@ -60,6 +85,24 @@ export function DashboardPage() {
       setActionError(null)
       await queryClient.invalidateQueries({
         queryKey: ['admin', 'contact-messages'],
+      })
+    },
+    onError: (error: Error) => {
+      setActionError(getErrorMessage(error))
+    },
+  })
+  const updateFeaturedProject = useMutation({
+    mutationFn: ({
+      repoFullName,
+      isFeatured,
+    }: {
+      repoFullName: string
+      isFeatured: boolean
+    }) => setFeaturedProject(repoFullName, isFeatured),
+    onSuccess: async () => {
+      setActionError(null)
+      await queryClient.invalidateQueries({
+        queryKey: ['featured-projects'],
       })
     },
     onError: (error: Error) => {
@@ -115,7 +158,101 @@ export function DashboardPage() {
       )}
 
       {isAdmin && (
-        <section aria-labelledby="messages-heading">
+        <>
+          <section aria-labelledby="featured-projects-heading">
+            <div className="section-heading dashboard-section-heading">
+              <div>
+                <p className="eyebrow">Página inicial</p>
+                <h2 id="featured-projects-heading">Projetos em destaque</h2>
+              </div>
+            </div>
+            <p>
+              Escolha os repositórios públicos que aparecem na página inicial.
+            </p>
+
+            {isLoadingRepositories && (
+              <p role="status">Carregando repositórios...</p>
+            )}
+            {repositoriesError && (
+              <div className="notice" role="alert">
+                <p>
+                  Não foi possível carregar os repositórios:{' '}
+                  {getErrorMessage(repositoriesError)}
+                </p>
+                <button
+                  className="text-button"
+                  type="button"
+                  onClick={() => void refetchRepositories()}
+                >
+                  Tentar novamente
+                </button>
+              </div>
+            )}
+            {isLoadingFeaturedProjects && (
+              <p role="status">Carregando seleção de destaques...</p>
+            )}
+            {featuredProjectsError && (
+              <div className="notice" role="alert">
+                <p>
+                  Não foi possível carregar os destaques:{' '}
+                  {getErrorMessage(featuredProjectsError)}
+                </p>
+                <button
+                  className="text-button"
+                  type="button"
+                  onClick={() => void refetchFeaturedProjects()}
+                >
+                  Tentar novamente
+                </button>
+              </div>
+            )}
+            {repositories && featuredProjectNames && (
+              <div className="repository-grid">
+                {repositories.map((repository) => {
+                  const isFeatured = featuredProjectNames.includes(
+                    repository.full_name,
+                  )
+
+                  return (
+                    <article
+                      className="repository-card"
+                      key={repository.full_name}
+                    >
+                      <div className="repository-card-heading">
+                        <p className="repository-owner">
+                          {repository.owner.login}
+                        </p>
+                        <h3>{repository.name}</h3>
+                      </div>
+                      <p className="repository-description">
+                        {repository.description ??
+                          'Descrição não cadastrada no GitHub.'}
+                      </p>
+                      <button
+                        className="button button-secondary message-action"
+                        type="button"
+                        aria-pressed={isFeatured}
+                        disabled={updateFeaturedProject.isPending}
+                        onClick={() => {
+                          setActionError(null)
+                          updateFeaturedProject.mutate({
+                            repoFullName: repository.full_name,
+                            isFeatured: !isFeatured,
+                          })
+                        }}
+                      >
+                        {isFeatured
+                          ? 'Remover dos destaques'
+                          : 'Destacar na página inicial'}
+                      </button>
+                    </article>
+                  )
+                })}
+              </div>
+            )}
+          </section>
+
+          <section aria-labelledby="messages-heading">
           <div className="section-heading dashboard-section-heading">
             <div>
               <p className="eyebrow">Caixa de entrada</p>
@@ -193,7 +330,8 @@ export function DashboardPage() {
               ))}
             </div>
           )}
-        </section>
+          </section>
+        </>
       )}
     </section>
   )
